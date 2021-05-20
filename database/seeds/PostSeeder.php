@@ -20,7 +20,25 @@ class PostSeeder extends Seeder
             $new_post->title = $faker->sentence(rand(1,5));
             $new_post->message = $faker->text();
             
-            $new_post->slug = Str::slug($new_post->title, '-');
+            // genero lo slug
+            $slug = Str::slug($new_post->title, '-');
+            $slug_base = $slug;
+
+            //verifico che lo slug non sia già presente nel db
+            $slug_present = Post::where('slug', $slug)->first();
+            $counter = 1;
+
+            //ciclo fino a quando slug_present diventa true
+            while($slug_present) {
+                $slug = $slug_base.'-'.$counter;
+                $counter++; 
+                $slug_present = Post::where('slug', $slug)->first();
+            }
+
+            $new_post->slug = $slug;
+
+            //perchè ho solo 1 utente
+            $new_post->user_id = 1;
 
             $new_post->save();
         }

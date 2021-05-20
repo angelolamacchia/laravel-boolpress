@@ -16,6 +16,10 @@
 
                     {{ __('You are logged in as Admin') }}
                 </div>
+
+                <div class="content">
+                    <h4>Queste informazioni sono visibili solo se sei loggato come Admin</h4>
+                </div>
             </div>
         </div>
     </div>
