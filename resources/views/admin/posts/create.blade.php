@@ -37,6 +37,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+                
                 {{-- <div class="form-group">
                     <label>Categoria</label>
                     <select class="form-control @error('category_id') is-invalid @enderror" name="category_id">
@@ -52,8 +53,7 @@
                     @enderror
                 </div> --}}
                 
-                {{-- PARTE DEI TAG CHE COMMENTO TEMPORANEAMENTEEEEEEEEEEEEEEEEE --}}
-                {{-- <div class="form-group">
+                <div class="form-group">
                     <p>Seleziona i tag:</p>
                     @foreach ($tags as $tag)
                         <div class="form-check @error('tags') is-invalid @enderror">
@@ -67,7 +67,8 @@
                     @error('tags')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div> --}}
+                </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Crea post

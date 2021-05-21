@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Tag;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -28,8 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        
-        return view('admin.posts.create');
+        $data = ['tags'=>Tag::all()];
+
+        return view('admin.posts.create', $data);
     }
 
     /**
@@ -67,6 +69,12 @@ class PostController extends Controller
 
         $newPost->save();
 
+        // controllo se sono stati selezionati dei tag
+        if (array_key_exists('tags', $data)) {
+            // aggiungo i tag al post
+            $newPost->tags()->sync($data['tags']);
+        }
+
         return redirect()->route('admin.posts.index');
     }
 
@@ -87,9 +95,17 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        if (!$post) {
+            abort(404);
+        }
+        $data = [
+            'post'=>$post,
+            'tags'=>Tag::all(),
+        ];
+
+        return view('admin.posts.edit', $data);
     }
 
     /**
@@ -99,9 +115,40 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'title'=>'required|max:255',
+            'content'=>'required'
+        ]);
+
+        $data = $request->all();
+
+        //se cambio il titolo si modifica lo slug
+        if ($data['title'] != $post->title) {
+            $slug = Str::slug($data['title']);
+            $slug_base = $slug;
+            $post_present = Post::where('slug', $slug)->first();
+            $counter=1;
+            while($post_present) {
+                $slug = $slug_base.'-'.$counter;
+                $counter++;
+                $post_present = Post::where('slug', $slug)->first();
+            }
+
+            $data['slug'] = $slug;
+        }
+
+        $post->update($data);
+
+        //aggiorno i tag in base al select
+        if (array_key_exists('tags', $data)) {
+            $post->tags()->sync($data['tags']);
+        } else {
+            $post->tags()->sync([]);
+        }
+
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -110,8 +157,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $post->tags()->sync([]);
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index');
     }
 }

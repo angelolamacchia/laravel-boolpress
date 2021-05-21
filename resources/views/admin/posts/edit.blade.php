@@ -44,10 +44,13 @@
                     <p>Seleziona i tag:</p>
                     @foreach ($tags as $tag)
                         <div class="form-check @error('tags') is-invalid @enderror">
-                            
+                            @if($errors->any())
+                            <input name="tags[]" class="form-check-input" type="checkbox" value="{{ $tag->id }}"
+                            {{ in_array($tag->id, old('tags', [])) ? 'checked=checked' : '' }}>
+                            @else
                             <input name="tags[]" class="form-check-input" type="checkbox" value="{{ $tag->id }}"
                             {{ $post->tags->contains($tag) ? 'checked=checked' : '' }}>
-                            
+                            @endif
                             <label class="form-check-label">
                                 {{ $tag->name }}
                             </label>

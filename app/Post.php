@@ -16,4 +16,9 @@ class Post extends Model
     public function category() {
         return $this->belongsTo('App\Category');
     }
+
+    // i tag hanno + post
+    public function tags() {
+        return $this->belongsToMany('App\Tag');
+    }
 }
