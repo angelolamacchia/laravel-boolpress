@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use App\Post;
 use Illuminate\Support\Str; //necessario per lo slug
+use Illuminate\Support\Facades\Auth;
 
 class PostSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class PostSeeder extends Seeder
             $new_post = new Post();
 
             $new_post->title = $faker->sentence(rand(1,5));
-            $new_post->message = $faker->text();
+            $new_post->content = $faker->text();
             
             // genero lo slug
             $slug = Str::slug($new_post->title, '-');
