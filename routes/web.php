@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', 'HomeController@index')->name('guest-home');
-Route::get('/posts', 'PostController@index')->name('posts.index');
-Route::get('/posts/{slug}', 'PostController@show')->name('posts.show');
+Route::prefix('posts')
+    ->group(function() {
+        Route::get('/', 'PostController@index')->name('posts.index');
+        Route::get('/{slug}', 'PostController@show')->name('posts.show');
+    });
 
 Auth::routes();
 
@@ -26,6 +29,8 @@ Route::prefix('admin')
     ->middleware('auth')
     ->group(function () {
         Route::get('/', 'HomeController@index')->name('admin-home');
+        Route::get('/profile', 'HomeController@profile')->name('admin-profile');
+        Route::post('/profile/generate-token', 'HomeController@generateToken')->name('admin.generate_token');
         Route::resource('/posts', 'PostController')->names([
             'index'=>'admin.posts.index',
             'create'=>'admin.posts.create',
@@ -34,5 +39,7 @@ Route::prefix('admin')
             'show'=>'admin.posts.show',
             'edit'=>'admin.posts.edit',
             'store'=>'admin.posts.store',
+            //in alternativa è possibile fissare un prefix nei guest
         ]);
-});
+    });
+
