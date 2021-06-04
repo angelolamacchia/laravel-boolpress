@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Post;
 use App\Tag;
 use Illuminate\Support\Str;
@@ -66,6 +67,13 @@ class PostController extends Controller
         $newPost->slug = $slug;
 
         $newPost->user_id = Auth::id();
+
+        if(array_key_exists('image', $data)) {
+            $image_path = Storage::put('post_images', $data['image']);
+            $data['image'] = $image_path;
+        }
+
+        $newPost->image = $data['image'];
 
         $newPost->save();
 
@@ -137,6 +145,11 @@ class PostController extends Controller
             }
 
             $data['slug'] = $slug;
+        }
+
+        if(array_key_exists('image', $data)) {
+            $image_path = Storage::put('post_images', $data['image']);
+            $data['image'] = $image_path;
         }
 
         $post->update($data);

@@ -60,6 +60,17 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="form-group">
+                    @if($post->image)
+                        <p>Immagine caricata</p>
+                        <img src="{{asset('storage/'. $post->image)}}" style="width: 500px; padding: 20px 0;">
+                    @else
+                        <p>Immagine non caricata</p>
+                    @endif
+                    <label>Immagine di copertina</label>
+                    <input type="file" name="image" id="update_file" class="form-control-file">
+                </div>
                 
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
